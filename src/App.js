@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 
 const allCountriesUrl = "https://crio-location-selector.onrender.com/countries";
@@ -11,6 +11,11 @@ function App() {
   const [selectedCountry, setSelectedCounty] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+
+  const countryRef = useRef();
+  const stateRef = useRef();
+
+  const cityRef = useRef();
 
   useEffect(() => {
     const getCountryData = async () => {
@@ -28,6 +33,9 @@ function App() {
     );
     const data = await res.json();
     console.log(data);
+
+    const stateInput = stateRef.current;
+    stateInput.disabled = false;
     setStatesList(data);
     setSelectedCounty(e.target.value);
   };
@@ -39,6 +47,8 @@ function App() {
     const data = await res.json();
     console.log(data);
     setCityList(data);
+    const cityInput = cityRef.current;
+    cityInput.disabled = false;
     setSelectedState(e.target.value);
   };
 
@@ -50,7 +60,7 @@ function App() {
     <>
       <h1>Select Location</h1>
       <form className="selectContainer">
-        <select id="countries" onChange={countryChangeHandler}>
+        <select ref={countryRef} id="countries" onChange={countryChangeHandler}>
           <option value="" disabled selected>
             Select Country
           </option>
@@ -58,16 +68,21 @@ function App() {
             return <option value={country}>{country}</option>;
           })}
         </select>
-        <select id="state" onChange={stateChangeHandler}>
-          <option value="" disabled selected>
+        <select
+          id="state"
+          onChange={stateChangeHandler}
+          ref={stateRef}
+          disabled
+        >
+          <option value="" selected>
             Select State
           </option>
           {statesList?.map((state) => {
             return <option value={state}>{state}</option>;
           })}
         </select>
-        <select id="city" onChange={cityChangeHandler}>
-          <option value="" disabled selected>
+        <select ref={cityRef} id="city" onChange={cityChangeHandler} disabled>
+          <option value="" selected>
             Select City
           </option>
           {cityList?.map((city) => {
