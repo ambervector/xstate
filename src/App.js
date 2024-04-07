@@ -18,16 +18,19 @@ function App() {
   const cityRef = useRef();
 
   useEffect(() => {
-    try {
-      const getCountryData = async () => {
-        const res = await fetch(allCountriesUrl);
+    const getCountryData = async () => {
+      const res = await fetch(
+        `https://crio-location-selector.onrender.com/countries`
+      );
+      console.log(res);
+      if (res.status === 200) {
         const data = await res.json();
         setCountriesList(data);
-      };
-      getCountryData();
-    } catch (err) {
-      console.error(err);
-    }
+      } else if (res.status === 500) {
+        return;
+      }
+    };
+    getCountryData();
   }, []);
 
   const countryChangeHandler = async (e) => {
