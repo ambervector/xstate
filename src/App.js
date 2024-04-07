@@ -18,13 +18,16 @@ function App() {
   const cityRef = useRef();
 
   useEffect(() => {
-    const getCountryData = async () => {
-      const res = await fetch(allCountriesUrl);
-      const data = await res.json();
-      setCountriesList(data);
-    };
-
-    getCountryData();
+    try {
+      const getCountryData = async () => {
+        const res = await fetch(allCountriesUrl);
+        const data = await res.json();
+        setCountriesList(data);
+      };
+      getCountryData();
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
   const countryChangeHandler = async (e) => {
