@@ -37,13 +37,16 @@ function App() {
     const res = await fetch(
       `https://crio-location-selector.onrender.com/country=${e.target.value}/states`
     );
-    const data = await res.json();
-    console.log(data);
 
-    const stateInput = stateRef.current;
-    stateInput.disabled = false;
-    setStatesList(data);
-    setSelectedCounty(e.target.value);
+    if (res.status === 200) {
+      const data = await res.json();
+      const stateInput = stateRef.current;
+      stateInput.disabled = false;
+      setStatesList(data);
+      setSelectedCounty(e.target.value);
+    } else if (res.status === 500) {
+      return;
+    }
   };
 
   const stateChangeHandler = async (e) => {
